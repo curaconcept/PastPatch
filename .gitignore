@@ -41,3 +41,6 @@ coverage/
 *.temp
 .cache/
 
+# Test data (optional - you may want to commit sample test files)
+# test-data/
+

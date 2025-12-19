@@ -75,11 +75,15 @@ export class Catalog {
             </div>
         `).join('');
 
-        // Add click handlers
+        // Add click handlers - will be updated by HomePage to use router
         toolsGrid.querySelectorAll('.tool-button').forEach(button => {
             button.addEventListener('click', (e) => {
                 const toolId = e.target.dataset.toolId;
-                this.selectTool(toolId);
+                if (window.router) {
+                    window.router.navigate(toolId);
+                } else {
+                    this.selectTool(toolId);
+                }
             });
         });
     }

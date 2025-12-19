@@ -7,6 +7,9 @@ export class UploadHandler {
     }
 
     init() {
+        // Clear any previous state
+        this.clearState();
+        
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         
@@ -45,14 +48,39 @@ export class UploadHandler {
         });
     }
 
-    handleFile(file) {
-        const uploadSection = document.getElementById('uploadSection');
-        this.selectedTool = uploadSection?.dataset.selectedTool;
+    clearState() {
+        // Clear any previous results
+        const uploadArea = document.getElementById('uploadArea');
+        const processingStatus = document.getElementById('processingStatus');
+        const results = document.getElementById('results');
+        const fileInput = document.getElementById('fileInput');
+        
+        if (uploadArea) uploadArea.style.display = 'block';
+        if (processingStatus) processingStatus.style.display = 'none';
+        if (results) results.style.display = 'none';
+        if (fileInput) fileInput.value = '';
+        
+        // Clean up object URLs
+        if (window.lastProcessResult) {
+            if (window.lastProcessResult.previews) {
+                window.lastProcessResult.previews.forEach(preview => {
+                    if (preview.thumbnail && preview.thumbnail.startsWith('blob:')) {
+                        URL.revokeObjectURL(preview.thumbnail);
+                    }
+                });
+            }
+            window.lastProcessResult = null;
+        }
+    }
 
+    handleFile(file) {
         if (!this.selectedTool) {
-            alert('Please select a tool from the catalog first.');
+            alert('Tool not selected. Please refresh the page.');
             return;
         }
+
+        // Clear previous state
+        this.clearState();
 
         // Show processing status
         document.getElementById('uploadArea').style.display = 'none';
@@ -98,7 +126,6 @@ export class UploadHandler {
             // Check if it's a "not implemented" error
             if (error.message.includes('not yet implemented') || error.message.includes('not implemented')) {
                 this.updateStatus('This tool is coming soon! The processor is not yet implemented.', 0);
-                // Show a back button
                 setTimeout(() => {
                     this.showComingSoonMessage();
                 }, 1500);
@@ -133,6 +160,8 @@ export class UploadHandler {
                     <p>${preview.filename}</p>
                 </div>
             `).join('');
+        } else {
+            previewArea.innerHTML = '<p>Processing complete! Download your files below.</p>';
         }
 
         // Display download options
@@ -172,7 +201,7 @@ export class UploadHandler {
                 <p style="margin-bottom: 2rem; color: var(--text-secondary);">
                     This processor is not yet implemented. We're working on it!
                 </p>
-                <button class="download-btn" onclick="window.location.reload()" style="background: var(--primary-color);">
+                <button class="download-btn" onclick="window.router.navigate('home')" style="background: var(--primary-color);">
                     Back to Catalog
                 </button>
             </div>
@@ -180,19 +209,6 @@ export class UploadHandler {
     }
 
     resetUpload() {
-        document.getElementById('uploadArea').style.display = 'block';
-        document.getElementById('processingStatus').style.display = 'none';
-        document.getElementById('results').style.display = 'none';
-        document.getElementById('fileInput').value = '';
-        
-        // Clean up object URLs
-        if (window.lastProcessResult && window.lastProcessResult.previews) {
-            window.lastProcessResult.previews.forEach(preview => {
-                if (preview.thumbnail && preview.thumbnail.startsWith('blob:')) {
-                    URL.revokeObjectURL(preview.thumbnail);
-                }
-            });
-        }
+        this.clearState();
     }
 }
-

@@ -10,67 +10,32 @@
 <body>
     <header>
         <div class="container">
-            <h1>PastPatch</h1>
+            <h1><a href="#home" style="text-decoration: none; color: inherit;">PastPatch</a></h1>
             <p class="tagline">Your Digital Time Capsule Repair Kit</p>
+            <nav class="main-nav">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#safety">Safety</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </nav>
         </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h2>Rescue Your Social Media Archives</h2>
-                <p>Upload your raw export files and let our client-side tools restore metadata, overlays, and timestamps. Everything runs in your browser—your data never leaves your device.</p>
-            </div>
-        </section>
-
-        <section class="catalog" id="catalog">
-            <div class="container">
-                <h2>Platform Tools</h2>
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search for a platform or tool...">
-                </div>
-                <div class="tools-grid" id="toolsGrid">
-                    <!-- Tools will be dynamically loaded here -->
-                </div>
-            </div>
-        </section>
-
-        <section class="upload-section" id="uploadSection" style="display: none;">
-            <div class="container">
-                <button class="back-button" id="backButton" onclick="document.getElementById('uploadSection').style.display='none'; document.getElementById('catalog').style.display='block'; window.scrollTo({top: 0, behavior: 'smooth'});" style="display: none; margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); cursor: pointer;">← Back to Catalog</button>
-                <h2 id="toolTitle">Process Your Archive</h2>
-                <div class="upload-area" id="uploadArea">
-                    <input type="file" id="fileInput" accept=".zip,.db,.html,.json" style="display: none;">
-                    <div class="upload-prompt">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
-                        <p>Drop your export file here or click to browse</p>
-                        <p class="file-hint">Supports: ZIP files, database backups, HTML exports, JSON files</p>
-                    </div>
-                </div>
-                <div class="processing-status" id="processingStatus" style="display: none;">
-                    <div class="spinner"></div>
-                    <p id="statusText">Processing your archive...</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                </div>
-                <div class="results" id="results" style="display: none;">
-                    <h3>Processing Complete!</h3>
-                    <div class="preview-area" id="previewArea"></div>
-                    <div class="download-options" id="downloadOptions"></div>
-                </div>
-            </div>
-        </section>
+    <main id="app-content">
+        <!-- Content will be dynamically loaded here -->
     </main>
 
     <footer>
         <div class="container">
-            <p>PastPatch is free and open-source. <a href="https://github.com/yourusername/PastPatch">View on GitHub</a></p>
-            <p>Privacy-first: All processing happens in your browser. No data is sent to our servers.</p>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#safety">Safety</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
+                <a href="https://github.com/curaconcept/PastPatch" target="_blank">GitHub</a>
+            </div>
+            <p>PastPatch is free and open-source. Privacy-first: All processing happens in your browser. No data is sent to our servers.</p>
         </div>
     </footer>
 
@@ -95,4 +60,3 @@
     </script>
 </body>
 </html>
-
