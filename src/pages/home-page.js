@@ -12,40 +12,33 @@ export class HomePage {
     render() {
         return `
             <section class="hero-modern">
-                <div class="hero-background">
-                    <div class="gradient-orb orb-1"></div>
-                    <div class="gradient-orb orb-2"></div>
-                    <div class="gradient-orb orb-3"></div>
-                </div>
                 <div class="container hero-content">
-                    <div class="hero-badge">
-                        <span class="badge-icon">🔒</span>
-                        <span>100% Client-Side Processing</span>
+                    <div class="hero-main">
+                        <h1 class="hero-title">PastPatch</h1>
+                        <p class="hero-subtitle">Your Digital Time Capsule Repair Kit</p>
+                        <p class="hero-description">
+                            Transform fragmented social media exports into polished, searchable archives. 
+                            <strong>Zero data collection. Complete privacy.</strong> Everything processes locally in your browser.
+                        </p>
                     </div>
-                    <h1 class="hero-title">
-                        <span class="gradient-text">PastPatch</span>
-                    </h1>
-                    <p class="hero-description">
-                        Transform fragmented social media exports into polished, searchable archives. 
-                        <strong>Zero data collection. Complete privacy.</strong> Everything processes locally in your browser.
-                    </p>
-                    <div class="hero-features">
-                        <div class="feature-item">
-                            <div class="feature-icon">⚡</div>
-                            <span>Instant Processing</span>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">Platforms</div>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🔐</div>
-                            <span>Zero Uploads</span>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Client-Side</div>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🎯</div>
-                            <span>6 Platforms</span>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">Data Uploaded</div>
                         </div>
                     </div>
                     <div class="hero-cta">
-                        <a href="#catalog-section" class="cta-primary">Get Started</a>
-                        <a href="#about" class="cta-secondary">Learn More</a>
+                        <a href="#catalog-section" class="cta-primary">Browse Tools</a>
                     </div>
                 </div>
             </section>
