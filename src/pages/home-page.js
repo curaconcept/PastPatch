@@ -23,8 +23,7 @@ export class HomePage {
                         <span>100% Client-Side Processing</span>
                     </div>
                     <h1 class="hero-title">
-                        <span class="gradient-text">Rescue</span> Your
-                        <span class="gradient-text">Digital Memories</span>
+                        <span class="gradient-text">PastPatch</span>
                     </h1>
                     <p class="hero-description">
                         Transform fragmented social media exports into polished, searchable archives. 
