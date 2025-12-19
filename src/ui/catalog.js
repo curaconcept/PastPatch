@@ -10,7 +10,7 @@ export class Catalog {
                 platform: 'Snapchat',
                 description: 'Bake PNG overlays back onto snaps, restore captions, and fix timestamps from memories_history.json exports.',
                 icon: '📸',
-                status: 'in-development'
+                status: 'coming-soon'
             },
             {
                 id: 'instagram',
@@ -18,7 +18,7 @@ export class Catalog {
                 platform: 'Instagram',
                 description: 'Fix story timestamps, locations, and restore stickers and AR effects from Instagram exports.',
                 icon: '📷',
-                status: 'in-development'
+                status: 'coming-soon'
             },
             {
                 id: 'whatsapp',
@@ -26,7 +26,7 @@ export class Catalog {
                 platform: 'WhatsApp',
                 description: 'Turn encrypted .db backups into interactive HTML viewers with inline images, reactions, and proper formatting.',
                 icon: '💬',
-                status: 'in-development'
+                status: 'coming-soon'
             },
             {
                 id: 'facebook',
@@ -34,7 +34,7 @@ export class Catalog {
                 platform: 'Facebook',
                 description: 'Restore chat exports with proper formatting, inline media, and conversation threading.',
                 icon: '👥',
-                status: 'in-development'
+                status: 'coming-soon'
             },
             {
                 id: 'tiktok',
@@ -42,7 +42,7 @@ export class Catalog {
                 platform: 'TikTok',
                 description: 'Rebuild video metadata, descriptions, and restore proper timestamps from TikTok downloads.',
                 icon: '🎵',
-                status: 'in-development'
+                status: 'coming-soon'
             },
             {
                 id: 'twitter',
@@ -50,7 +50,7 @@ export class Catalog {
                 platform: 'Twitter/X',
                 description: 'Reconstruct threaded conversations into readable timelines or PDF exports with proper formatting.',
                 icon: '🐦',
-                status: 'in-development'
+                status: 'coming-soon'
             }
         ];
     }
@@ -70,7 +70,7 @@ export class Catalog {
                 <h3>${tool.name}</h3>
                 <p class="tool-platform">${tool.platform}</p>
                 <p class="tool-description">${tool.description}</p>
-                <div class="tool-status">${tool.status}</div>
+                <div class="tool-status ${tool.status === 'coming-soon' ? 'coming-soon' : 'available'}">${tool.status === 'coming-soon' ? 'Coming Soon' : 'Available'}</div>
                 <button class="tool-button" data-tool-id="${tool.id}">Use Tool</button>
             </div>
         `).join('');
@@ -120,6 +120,10 @@ export class Catalog {
         const uploadSection = document.getElementById('uploadSection');
         uploadSection.style.display = 'block';
         document.getElementById('toolTitle').textContent = tool.name;
+        
+        // Show back button
+        const backButton = document.getElementById('backButton');
+        if (backButton) backButton.style.display = 'block';
 
         // Store selected tool for upload handler
         uploadSection.dataset.selectedTool = toolId;

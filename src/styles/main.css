@@ -165,6 +165,14 @@ header h1 {
     margin-bottom: 1rem;
 }
 
+.tool-status.coming-soon {
+    background: var(--warning);
+}
+
+.tool-status.available {
+    background: var(--success);
+}
+
 .tool-button {
     width: 100%;
     padding: 0.75rem;

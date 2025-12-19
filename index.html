@@ -37,6 +37,7 @@
 
         <section class="upload-section" id="uploadSection" style="display: none;">
             <div class="container">
+                <button class="back-button" id="backButton" onclick="document.getElementById('uploadSection').style.display='none'; document.getElementById('catalog').style.display='block'; window.scrollTo({top: 0, behavior: 'smooth'});" style="display: none; margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); cursor: pointer;">← Back to Catalog</button>
                 <h2 id="toolTitle">Process Your Archive</h2>
                 <div class="upload-area" id="uploadArea">
                     <input type="file" id="fileInput" accept=".zip,.db,.html,.json" style="display: none;">

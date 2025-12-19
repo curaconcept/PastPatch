@@ -94,10 +94,20 @@ export class UploadHandler {
 
         } catch (error) {
             console.error('Processing error:', error);
-            this.updateStatus(`Error: ${error.message}`, 0);
-            setTimeout(() => {
-                this.resetUpload();
-            }, 3000);
+            
+            // Check if it's a "not implemented" error
+            if (error.message.includes('not yet implemented') || error.message.includes('not implemented')) {
+                this.updateStatus('This tool is coming soon! The processor is not yet implemented.', 0);
+                // Show a back button
+                setTimeout(() => {
+                    this.showComingSoonMessage();
+                }, 1500);
+            } else {
+                this.updateStatus(`Error: ${error.message}`, 0);
+                setTimeout(() => {
+                    this.resetUpload();
+                }, 3000);
+            }
         }
     }
 
@@ -131,6 +141,21 @@ export class UploadHandler {
             <button class="download-btn" onclick="this.downloadResult('zip')">Download as ZIP</button>
             <button class="download-btn" onclick="this.downloadResult('google-photos')">Export for Google Photos</button>
             <button class="download-btn" onclick="this.downloadResult('pdf')">Export as PDF</button>
+        `;
+    }
+
+    showComingSoonMessage() {
+        const processingStatus = document.getElementById('processingStatus');
+        processingStatus.innerHTML = `
+            <div style="text-align: center; padding: 2rem;">
+                <h3 style="color: var(--warning); margin-bottom: 1rem;">🚧 Coming Soon</h3>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">
+                    This processor is not yet implemented. We're working on it!
+                </p>
+                <button class="download-btn" onclick="window.location.reload()" style="background: var(--primary-color);">
+                    Back to Catalog
+                </button>
+            </div>
         `;
     }
 
