@@ -34,6 +34,11 @@ export class Router {
             // Default to home
             this.navigate('home');
         }
+        
+        // Update active nav state
+        if (typeof updateActiveNav === 'function') {
+            setTimeout(updateActiveNav, 10);
+        }
     }
 
     getCurrentRoute() {

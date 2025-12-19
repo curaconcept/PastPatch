@@ -11,6 +11,21 @@ import { TermsPage } from './pages/terms-page.js';
 window.router = new Router();
 let currentPage = null;
 
+// Update active nav state
+function updateActiveNav() {
+    const currentRoute = window.router.getCurrentRoute() || 'home';
+    const navLinks = document.querySelectorAll('.main-nav a');
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const linkRoute = href.replace('#', '') || 'home';
+        if (linkRoute === currentRoute) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
+
 // Get tools data
 const tools = [
     {
@@ -110,7 +125,12 @@ function renderPage(page) {
         content.innerHTML = page.render();
         if (page.init) {
             // Small delay to ensure DOM is ready
-            setTimeout(() => page.init(), 10);
+            setTimeout(() => {
+                page.init();
+                updateActiveNav();
+            }, 10);
+        } else {
+            updateActiveNav();
         }
     }
 }
