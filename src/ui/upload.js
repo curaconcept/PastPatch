@@ -137,11 +137,31 @@ export class UploadHandler {
 
         // Display download options
         const downloadOptions = document.getElementById('downloadOptions');
-        downloadOptions.innerHTML = `
-            <button class="download-btn" onclick="this.downloadResult('zip')">Download as ZIP</button>
-            <button class="download-btn" onclick="this.downloadResult('google-photos')">Export for Google Photos</button>
-            <button class="download-btn" onclick="this.downloadResult('pdf')">Export as PDF</button>
-        `;
+        downloadOptions.innerHTML = '';
+        
+        if (result.files) {
+            for (const [filename, blob] of Object.entries(result.files)) {
+                const button = document.createElement('button');
+                button.className = 'download-btn';
+                button.textContent = `Download ${filename}`;
+                button.onclick = () => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                };
+                downloadOptions.appendChild(button);
+            }
+        } else {
+            downloadOptions.innerHTML = '<p>No files to download.</p>';
+        }
+        
+        // Store result for cleanup
+        window.lastProcessResult = result;
     }
 
     showComingSoonMessage() {
@@ -164,6 +184,15 @@ export class UploadHandler {
         document.getElementById('processingStatus').style.display = 'none';
         document.getElementById('results').style.display = 'none';
         document.getElementById('fileInput').value = '';
+        
+        // Clean up object URLs
+        if (window.lastProcessResult && window.lastProcessResult.previews) {
+            window.lastProcessResult.previews.forEach(preview => {
+                if (preview.thumbnail && preview.thumbnail.startsWith('blob:')) {
+                    URL.revokeObjectURL(preview.thumbnail);
+                }
+            });
+        }
     }
 }
 

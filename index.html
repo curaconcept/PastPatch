@@ -75,6 +75,24 @@
     </footer>
 
     <script type="module" src="./src/main.js"></script>
+    <script>
+        // Global download function
+        window.downloadFile = function(filename, url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+        
+        // Enhanced download for blobs
+        window.downloadBlob = function(filename, blob) {
+            const url = URL.createObjectURL(blob);
+            window.downloadFile(filename, url);
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+        };
+    </script>
 </body>
 </html>
 

@@ -2,6 +2,8 @@
  * Metadata utilities
  * Handles EXIF, IPTC, and other metadata operations
  */
+import EXIF from 'exif-js';
+import piexif from 'piexifjs';
 
 /**
  * Extract EXIF data from an image
@@ -9,19 +11,14 @@
  * @returns {Promise<Object>} EXIF data
  */
 export async function extractEXIF(imageBlob) {
-    // TODO: Implement EXIF extraction using exif-js or piexifjs
-    return {};
-}
-
-/**
- * Embed EXIF data into an image
- * @param {Blob} imageBlob - Original image
- * @param {Object} exifData - EXIF data to embed
- * @returns {Promise<Blob>} Image with embedded EXIF
- */
-export async function embedEXIF(imageBlob, exifData) {
-    // TODO: Implement EXIF embedding
-    return imageBlob;
+    return new Promise((resolve) => {
+        const url = URL.createObjectURL(imageBlob);
+        EXIF.getData(url, function() {
+            const exifData = EXIF.getAllTags(this);
+            URL.revokeObjectURL(url);
+            resolve(exifData || {});
+        });
+    });
 }
 
 /**
@@ -31,7 +28,41 @@ export async function embedEXIF(imageBlob, exifData) {
  * @returns {Promise<Blob>} Image with updated date
  */
 export async function setCaptureDate(imageBlob, date) {
-    // TODO: Implement date setting
-    return imageBlob;
+    try {
+        const arrayBuffer = await imageBlob.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const binary = '';
+        for (let i = 0; i < uint8Array.length; i++) {
+            binary += String.fromCharCode(uint8Array[i]);
+        }
+        
+        let exifObj = {};
+        try {
+            exifObj = piexif.load(binary);
+        } catch (e) {
+            // No existing EXIF, create new
+            exifObj = {'0th': {}, 'Exif': {}, 'GPS': {}, 'Interop': {}, '1st': {}, 'thumbnail': null};
+        }
+        
+        // Set date/time
+        const dateStr = date.toISOString().replace(/[-:]/g, ':').split('.')[0];
+        exifObj['0th'][piexif.ImageIFD.DateTime] = dateStr;
+        exifObj['Exif'][piexif.ExifIFD.DateTimeOriginal] = dateStr;
+        exifObj['Exif'][piexif.ExifIFD.DateTimeDigitized] = dateStr;
+        
+        const exifBytes = piexif.dump(exifObj);
+        const newBinary = piexif.insert(exifBytes, binary);
+        
+        // Convert back to blob
+        const newArray = new Uint8Array(newBinary.length);
+        for (let i = 0; i < newBinary.length; i++) {
+            newArray[i] = newBinary.charCodeAt(i);
+        }
+        
+        return new Blob([newArray], { type: imageBlob.type });
+    } catch (error) {
+        console.warn('Failed to set EXIF date:', error);
+        return imageBlob; // Return original if EXIF manipulation fails
+    }
 }
 

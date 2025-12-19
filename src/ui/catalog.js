@@ -10,7 +10,7 @@ export class Catalog {
                 platform: 'Snapchat',
                 description: 'Bake PNG overlays back onto snaps, restore captions, and fix timestamps from memories_history.json exports.',
                 icon: '📸',
-                status: 'coming-soon'
+                status: 'available'
             },
             {
                 id: 'instagram',
@@ -18,7 +18,7 @@ export class Catalog {
                 platform: 'Instagram',
                 description: 'Fix story timestamps, locations, and restore stickers and AR effects from Instagram exports.',
                 icon: '📷',
-                status: 'coming-soon'
+                status: 'available'
             },
             {
                 id: 'whatsapp',
@@ -26,7 +26,7 @@ export class Catalog {
                 platform: 'WhatsApp',
                 description: 'Turn encrypted .db backups into interactive HTML viewers with inline images, reactions, and proper formatting.',
                 icon: '💬',
-                status: 'coming-soon'
+                status: 'available'
             },
             {
                 id: 'facebook',
@@ -34,7 +34,7 @@ export class Catalog {
                 platform: 'Facebook',
                 description: 'Restore chat exports with proper formatting, inline media, and conversation threading.',
                 icon: '👥',
-                status: 'coming-soon'
+                status: 'available'
             },
             {
                 id: 'tiktok',
@@ -42,7 +42,7 @@ export class Catalog {
                 platform: 'TikTok',
                 description: 'Rebuild video metadata, descriptions, and restore proper timestamps from TikTok downloads.',
                 icon: '🎵',
-                status: 'coming-soon'
+                status: 'available'
             },
             {
                 id: 'twitter',
@@ -50,7 +50,7 @@ export class Catalog {
                 platform: 'Twitter/X',
                 description: 'Reconstruct threaded conversations into readable timelines or PDF exports with proper formatting.',
                 icon: '🐦',
-                status: 'coming-soon'
+                status: 'available'
             }
         ];
     }
