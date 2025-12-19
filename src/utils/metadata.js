@@ -31,7 +31,7 @@ export async function setCaptureDate(imageBlob, date) {
     try {
         const arrayBuffer = await imageBlob.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
-        const binary = '';
+        let binary = '';
         for (let i = 0; i < uint8Array.length; i++) {
             binary += String.fromCharCode(uint8Array[i]);
         }

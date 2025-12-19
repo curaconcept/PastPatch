@@ -42,8 +42,13 @@ export class TikTokProcessor extends BaseProcessor {
         const previews = [];
         let processed = 0;
 
-        for (const videoFile of videoFiles) {
+        for (let i = 0; i < videoFiles.length; i++) {
+            const videoFile = videoFiles[i];
             try {
+                // Update progress
+                const progressPercent = 30 + ((i / videoFiles.length) * 60);
+                this.updateProgress(progressCallback, `Processing video ${i + 1} of ${videoFiles.length}...`, progressPercent);
+                
                 const videoBlob = zip ? await ZipHandler.getFile(zip, videoFile) : file;
                 
                 // Look for metadata (JSON files with same name)
@@ -71,6 +76,7 @@ export class TikTokProcessor extends BaseProcessor {
                 }
             } catch (error) {
                 console.warn(`Failed to process ${videoFile}:`, error);
+                // Continue with next file
             }
         }
 

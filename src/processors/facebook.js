@@ -50,9 +50,19 @@ export class FacebookProcessor extends BaseProcessor {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         
+        // Check for parsing errors
+        const parserError = doc.querySelector('parsererror');
+        if (parserError) {
+            throw new Error('Failed to parse HTML. Please ensure this is a valid Facebook export file.');
+        }
+        
         // Facebook exports have messages in divs with specific classes
         // Structure varies, so we'll look for common patterns
         const messages = this.extractMessages(doc);
+
+        if (messages.length === 0) {
+            throw new Error('No messages found in export. Please ensure this is a valid Facebook Messenger export.');
+        }
 
         this.updateProgress(progressCallback, 'Organizing conversations...', 60);
 

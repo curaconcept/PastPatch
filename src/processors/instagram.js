@@ -63,9 +63,14 @@ export class InstagramProcessor extends BaseProcessor {
         const previews = [];
         let processed = 0;
 
-        for (const mediaItem of allMedia) {
+        for (let i = 0; i < allMedia.length; i++) {
+            const mediaItem = allMedia[i];
             try {
-                const result = await this.processMediaItem(mediaItem, zip, files, progressCallback, processed, allMedia.length);
+                // Update progress
+                const progressPercent = 40 + ((i / allMedia.length) * 50);
+                this.updateProgress(progressCallback, `Processing item ${i + 1} of ${allMedia.length}...`, progressPercent);
+                
+                const result = await this.processMediaItem(mediaItem, zip, files);
                 if (result) {
                     processedFiles[result.filename] = result.blob;
                     if (result.thumbnail) {
@@ -78,6 +83,7 @@ export class InstagramProcessor extends BaseProcessor {
                 }
             } catch (error) {
                 console.warn(`Failed to process media item:`, error);
+                // Continue with next item
             }
         }
 
@@ -131,42 +137,72 @@ export class InstagramProcessor extends BaseProcessor {
         );
     }
 
-    async processMediaItem(mediaItem, zip, files, progressCallback, current, total) {
-        // Find the actual media file
-        const mediaPath = mediaItem.uri || mediaItem.path || mediaItem.media_path || mediaItem.media_url;
-        if (!mediaPath) return null;
-
-        // Find matching file in ZIP
-        const fileName = mediaPath.split('/').pop() || mediaPath;
-        const matchingFile = files.find(f => 
-            f.includes(fileName) || 
-            f.endsWith(fileName) ||
-            f.includes(fileName.split('.')[0])
-        );
-
-        if (!matchingFile) {
-            // Try to find by media key or ID
-            const mediaKey = mediaItem.media_key || mediaItem.id;
-            if (mediaKey) {
-                const keyFile = files.find(f => f.includes(mediaKey));
-                if (keyFile) {
-                    return await this.processFile(keyFile, mediaItem, zip);
+    async processMediaItem(mediaItem, zip, files) {
+        try {
+            // Find the actual media file
+            const mediaPath = mediaItem.uri || mediaItem.path || mediaItem.media_path || mediaItem.media_url;
+            if (!mediaPath) {
+                // Try alternative: look for direct file references
+                const mediaKey = mediaItem.media_key || mediaItem.id || mediaItem.media_id;
+                if (mediaKey) {
+                    const keyFile = files.find(f => f.includes(mediaKey.toString()));
+                    if (keyFile) {
+                        return await this.processFile(keyFile, mediaItem, zip);
+                    }
                 }
+                return null;
             }
+
+            // Find matching file in ZIP
+            const fileName = mediaPath.split('/').pop() || mediaPath.split('\\').pop() || mediaPath;
+            const matchingFile = files.find(f => {
+                const fLower = f.toLowerCase();
+                const nameLower = fileName.toLowerCase();
+                return fLower.includes(nameLower) || 
+                       fLower.endsWith(nameLower) ||
+                       fLower.includes(nameLower.split('.')[0]);
+            });
+
+            if (!matchingFile) {
+                // Try to find by media key or ID
+                const mediaKey = mediaItem.media_key || mediaItem.id || mediaItem.media_id;
+                if (mediaKey) {
+                    const keyFile = files.find(f => f.includes(mediaKey.toString()));
+                    if (keyFile) {
+                        return await this.processFile(keyFile, mediaItem, zip);
+                    }
+                }
+                // Last resort: find any image/video file
+                const anyMediaFile = files.find(f => {
+                    const ext = f.toLowerCase().split('.').pop();
+                    return ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webp'].includes(ext);
+                });
+                if (anyMediaFile) {
+                    return await this.processFile(anyMediaFile, mediaItem, zip);
+                }
+                return null;
+            }
+
+            return await this.processFile(matchingFile, mediaItem, zip);
+        } catch (error) {
+            console.warn('Error processing media item:', error);
             return null;
         }
-
-        return await this.processFile(matchingFile, mediaItem, zip);
     }
 
     async processFile(filePath, metadata, zip) {
-        const fileBlob = await ZipHandler.getFile(zip, filePath);
-        const isImage = filePath.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
+        try {
+            const fileBlob = await ZipHandler.getFile(zip, filePath);
+            const isImage = filePath.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
 
-        if (isImage) {
-            return await this.processImage(metadata, fileBlob, filePath);
-        } else {
-            return await this.processVideo(metadata, fileBlob, filePath);
+            if (isImage) {
+                return await this.processImage(metadata, fileBlob, filePath);
+            } else {
+                return await this.processVideo(metadata, fileBlob, filePath);
+            }
+        } catch (error) {
+            console.warn(`Failed to process file ${filePath}:`, error);
+            return null;
         }
     }
 

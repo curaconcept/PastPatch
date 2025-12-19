@@ -130,10 +130,22 @@ export class UploadHandler {
                     this.showComingSoonMessage();
                 }, 1500);
             } else {
-                this.updateStatus(`Error: ${error.message}`, 0);
+                // Show user-friendly error message
+                let errorMessage = error.message || 'An unknown error occurred';
+                
+                // Make error messages more helpful
+                if (errorMessage.includes('not found')) {
+                    errorMessage = 'File structure not recognized. Please ensure you uploaded a valid export file.';
+                } else if (errorMessage.includes('JSON')) {
+                    errorMessage = 'Invalid file format. Please check that your export file is not corrupted.';
+                } else if (errorMessage.includes('ZIP')) {
+                    errorMessage = 'Unable to read ZIP file. Please ensure the file is not corrupted.';
+                }
+                
+                this.updateStatus(`Error: ${errorMessage}`, 0);
                 setTimeout(() => {
-                    this.resetUpload();
-                }, 3000);
+                    this.showErrorMessage(errorMessage);
+                }, 1500);
             }
         }
     }
@@ -206,6 +218,33 @@ export class UploadHandler {
                 </button>
             </div>
         `;
+    }
+
+    showErrorMessage(message) {
+        const processingStatus = document.getElementById('processingStatus');
+        processingStatus.innerHTML = `
+            <div style="text-align: center; padding: 2rem;">
+                <h3 style="color: var(--error); margin-bottom: 1rem;">❌ Processing Failed</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+                    ${message}
+                </p>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary); font-size: 0.875rem;">
+                    Please check the browser console (F12) for more details, or try a different file.
+                </p>
+                <button class="download-btn" onclick="this.resetUpload()" style="background: var(--primary-color);">
+                    Try Again
+                </button>
+                <button class="download-btn" onclick="window.router.navigate('home')" style="background: var(--surface); border: 1px solid var(--border-color); margin-left: 0.5rem;">
+                    Back to Catalog
+                </button>
+            </div>
+        `;
+        
+        // Store reference for reset
+        const resetBtn = processingStatus.querySelector('button');
+        if (resetBtn) {
+            resetBtn.resetUpload = () => this.resetUpload();
+        }
     }
 
     resetUpload() {
