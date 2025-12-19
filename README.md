@@ -8,7 +8,7 @@ Simply upload your raw export file directly in your browser—**no accounts, no 
 
 ### How It Works
 
-Our JavaScript-powered processors (built on libraries like JSZip for extraction, EXIF.js for metadata embedding, and Sharp for image/video manipulation) parse the zip's structure—whether it's:
+Our JavaScript-powered processors (built on libraries like JSZip for extraction, EXIF.js for metadata embedding, and native browser APIs like Canvas for image/video manipulation) parse the zip's structure—whether it's:
 - **Snapchat's** `memories_history.json` with caption positions and dates
 - **Instagram's** messy JSON blobs for story stickers and AR effects
 - **WhatsApp's** encrypted `.db` backups (with user-provided keys for decryption)
@@ -77,11 +77,13 @@ The built files will be in the `dist/` directory, ready to deploy to any static 
 
 - **Core**: Vanilla JavaScript (ES6+)
 - **File Processing**: JSZip, FileReader API
-- **Image Processing**: Sharp (via WebAssembly), Canvas API
+- **Image Processing**: Canvas API, native browser image manipulation
 - **Metadata**: EXIF.js, piexifjs
-- **Video Processing**: FFmpeg.wasm
+- **Video Processing**: Canvas API, Web Workers (FFmpeg.wasm can be added for advanced video processing)
 - **UI Framework**: Modern CSS with minimal dependencies
 - **Build Tool**: Vite (for development and bundling)
+
+**Note**: All processing happens client-side in the browser. No server-side dependencies required.
 
 ## 📁 Project Structure
 
